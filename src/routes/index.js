@@ -24,7 +24,7 @@ router.post('/check', function(request, response){
 router.post('/init', function (request, response) {
   let result = cli.initProject();
   if(result){
-    response.json({message: result});
+    response.json(result);
   }else{
     response.status(401).json({code: errCode.INIT_PROJECT_CODE, message: errCode.INIT_PROJECT_MESSAGE });
   }

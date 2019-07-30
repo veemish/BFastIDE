@@ -5,6 +5,9 @@ var child_process = require ('child_process');
 var file = require('fs');
 var process = require( 'process');
 var path = require('path');
+var errCode = require('../erroCode');
+var repoController = require('./RepositoryController');
+
 let projectFolder = '/spring/daas/src/main/kotlin/com/fahamutech/daas';
 
 module.exports.DomainController = {
@@ -30,22 +33,39 @@ module.exports.DomainController = {
                             reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain fields data can't be determined"});
                         }
                     });
-                    let domainInKotlin = `
-                    package com.fahamutech.daas.domain
 
-                    import com.fahamutech.daas.common.*
-                    import org.springframework.data.annotation.*
-                    
-                    class ${schema.name} : ${schema.parent}(){
-                        ${domainFields}
-                    }`;
-                    
+let domainInKotlin = `
+package com.fahamutech.daas.domain
+
+import com.fahamutech.daas.common.*
+import org.springframework.data.annotation.*
+import org.springframework.data.mongodb.core.index.*
+
+class ${schema.name} : ${schema.parent}(){
+    ${domainFields}
+}`;
+
+let repositoryInKotlin = `
+package com.fahamutech.daas.domain
+
+import com.fahamutech.daas.domain.${schema.name}
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.CrossOrigin;
+
+@CrossOrigin(origins = ["*"])
+interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
+}
+`
+
                     try{
-                        var normalPath = path.join(__dirname,`../${projectFolder}/domain/${schema.name}.kt`);
-                        // console.log(normalPath);
-                        let domainFile = file.writeFileSync(normalPath, domainInKotlin);
-                        console.log(domainFile);
-                        resolve(domainInKotlin);
+                        var domainPath = path.join(__dirname, `../${projectFolder}/domain/${schema.name}.kt`);
+                        var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`)
+                        // create a domain.
+                        file.writeFileSync(domainPath, domainInKotlin);
+                        // create a repository
+                        file.writeFileSync(repoPath, repositoryInKotlin);
+                        resolve({domain: domainInKotlin});
                     }catch(e){
                         reject(e);
                     }
@@ -54,16 +74,21 @@ module.exports.DomainController = {
         },
         getDomain: function(name){
             return new Promise((resolve, reject)=>{
-                resolve({message: " We prepare a domain for you"});
+                try{
+                    var dFile = file.readFileSync(path.join(__dirname, `../${projectFolder}/domain/${name}`));
+                    resolve({domain: dFile.toString()});
+                }catch(e){
+                    reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e});
+                }
             });
         },
         getAllDomain: function(){
             return new Promise((resolve, reject)=>{
                 try{
-                    var result =  file.readdirSync(__dirname + projectFolder + '/domain');
+                    var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/domain`));
                     resolve({message: 'Process succeed', domains: result});
                 }catch(e){
-                    reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_ALL_MESSAGE, error: e.toString()});
+                    reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e.toString()});
                 }
             });
         },
@@ -73,36 +98,6 @@ module.exports.DomainController = {
             });
         },
         updateDomain: function(name){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        createRepository: function(schema){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        updateRepository: function(schema){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        deleteRepository: function(schema){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        patchRepository: function(schema){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        getRepository: function(name){
-            return new Promise((resolve, reject)=>{
-
-            });
-        },
-        getAllRepository: function(){
             return new Promise((resolve, reject)=>{
 
             });

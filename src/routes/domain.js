@@ -18,8 +18,7 @@ router.get('/', function(request, response){
 router.post('/', function(request, response){
     cli.domain.createDomain(request.body)
     .then(domain=>{
-        console.log(domain);
-        response.json({message: domain});
+        response.json(domain);
     })
     .catch(reason=>{
         response.status(401).json(reason);
@@ -32,6 +31,7 @@ router.get('/:name', function(request, response){
         response.json(domain);
     })
     .catch(reason=>{
+        // console.log(reason);
         response.status(401).json(reason);
     })
 });
