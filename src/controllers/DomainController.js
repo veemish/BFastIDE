@@ -3,15 +3,15 @@
 var os = require('os');
 var child_process = require ('child_process');
 var file = require('fs');
-var process = require( 'process');
 var path = require('path');
 var errCode = require('../erroCode');
 var repoController = require('./RepositoryController');
 
 let projectFolder = '/spring/daas/src/main/kotlin/com/fahamutech/daas';
 
-module.exports.DomainController = {
-        createDomain: function(schema){
+module.exports.DomainController = class {
+
+    createDomain(schema){
             return new Promise((resolve, reject)=>{
                 if(!schema){
                     reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain schema must be present"});
@@ -63,6 +63,7 @@ interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
                         var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`)
                         // create a domain.
                         file.writeFileSync(domainPath, domainInKotlin);
+                        // file.writeFileSync(domainPath, schema);
                         // create a repository
                         file.writeFileSync(repoPath, repositoryInKotlin);
                         resolve({domain: domainInKotlin});
@@ -71,37 +72,41 @@ interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
                     }
                 }
             });
-        },
-        getDomain: function(name){
-            return new Promise((resolve, reject)=>{
-                try{
-                    var dFile = file.readFileSync(path.join(__dirname, `../${projectFolder}/domain/${name}`));
-                    resolve({domain: dFile.toString()});
-                }catch(e){
-                    reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e});
-                }
-            });
-        },
-        getAllDomain: function(){
-            return new Promise((resolve, reject)=>{
-                try{
-                    var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/domain`));
-                    resolve({message: 'Process succeed', domains: result});
-                }catch(e){
-                    reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e.toString()});
-                }
-            });
-        },
-        deleteDomain: function(name){
-            return new Promise((resolve, reject)=>{
+    }
 
-            });
-        },
-        updateDomain: function(name){
-            return new Promise((resolve, reject)=>{
+    getDomain(name){
+        return new Promise((resolve, reject)=>{
+            try{
+                var dFile = file.readFileSync(path.join(__dirname, `../${projectFolder}/domain/${name}`));
+                resolve({domain: dFile.toString()});
+            }catch(e){
+                reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e});
+            }
+        });
+    }
 
-            });
-        }
+    getAllDomain(){
+        return new Promise((resolve, reject)=>{
+            try{
+                var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/domain`));
+                resolve({message: 'Process succeed', domains: result});
+            }catch(e){
+                reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e.toString()});
+            }
+        });
+    }
+
+    deleteDomain(name){
+        return new Promise((resolve, reject)=>{
+
+        });
+    }
+
+    updateDomain(name){
+        return new Promise((resolve, reject)=>{
+
+        });
+    }
 
 }
 

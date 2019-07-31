@@ -1,8 +1,11 @@
 FROM node:10
 
-WORKDIR /DaaS
+WORKDIR /daas
 
-COPY package*.json .
+COPY package*.json ./
 RUN npm ci --only=production
-COPY . .
+RUN apt-get update
+
+RUN apt-get install -y openjdk-8-jdk
+COPY . ./
 CMD [ "node", "bin/www" ]

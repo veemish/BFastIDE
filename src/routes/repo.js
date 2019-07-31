@@ -6,7 +6,7 @@ var cli = require('../cli').cli;
 var errCode = require('../erroCode');
 
 router.get('/', function(request, response){
-    cli.repo.getAllRepository()
+    cli.database.getAllRepository()
     .then(repos=>{
         response.json(repos);
     })
@@ -16,7 +16,7 @@ router.get('/', function(request, response){
 });
 
 router.get('/:name', function(request, response){
-    cli.repo.getRepository(request.params.name)
+    cli.database.getRepository(request.params.name)
     .then(repo=>{
         response.json(repo);
     })

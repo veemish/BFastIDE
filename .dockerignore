@@ -6,3 +6,8 @@ README.md
 specs
 .idea
 testScrp
+composeDeploy.bat
+composeDeploy.sh
+docker-compose.yml
+Dockerfile
+src/spring/daas

@@ -1,33 +1,14 @@
 'use strict'
 
-// import { Router } from 'express';
 var  express = require('express');
-var cli  = require('../cli').cli;
-var errCode = require('../erroCode');
 var router = express.Router();
 
+router.get('/',function(request, response){
+  response.redirect('/help');
+});
 
-/* GET home page. */
 router.get('/version', function(req, res, next) {
   res.json({version:'1.0.0', name:'ethan'});
-});
-
-router.post('/check', function(request, response){
-  let result = cli.checkProject();
-  if(result){
-    response.json({message: "Folder project exist", folder: result});
-  }else{
-    response.status(401).json({code: errCode.NO_FOLDER_CODE , message: errCode.NO_FOLDER_MESSAGE})
-  }
-});
-
-router.post('/init', function (request, response) {
-  let result = cli.initProject();
-  if(result){
-    response.json(result);
-  }else{
-    response.status(401).json({code: errCode.INIT_PROJECT_CODE, message: errCode.INIT_PROJECT_MESSAGE });
-  }
 });
 
 router.get('/help', function (request, response) {

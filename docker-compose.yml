@@ -1,1 +1,30 @@
-version: 1
+version: '3'
+services: 
+  web:
+    build: .
+    ports:
+    - "5000:3000"
+    volumes: 
+    - apiData:/daas/src/spring
+    restart: always
+    links: 
+    - mdb
+    # - daas
+  mdb:
+    image: mongo
+    volumes:
+    - daaSDbData:/var/data
+    restart: always
+  # daas:
+  #   image: openjdk:8
+  #   ports: 
+  #   - "6000:8080"
+  #   restart: always
+  #   volumes: 
+  #   - daaSData:~/
+volumes: 
+  apiData: {}
+  daaSData: {}
+  daaSDbData:
+
+

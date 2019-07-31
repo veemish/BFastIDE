@@ -9,29 +9,33 @@ var errCode = require('../erroCode');
 
 let projectFolder = '/spring/daas/src/main/kotlin/com/fahamutech/daas';
 
-module.exports.RepositoryController = {
+module.exports.RepositoryController = class {
 
-    createRepository: function(schema){
+    createRepository(schema){
         return new Promise((resolve, reject)=>{
 
         });
-    },
-    updateRepository: function(schema){
+    }
+
+    updateRepository(schema){
         return new Promise((resolve, reject)=>{
 
         });
-    },
-    deleteRepository: function(schema){
+    }
+
+    deleteRepository(schema){
         return new Promise((resolve, reject)=>{
 
         });
-    },
-    patchRepository: function(schema){
+    }
+
+    patchRepository(schema){
         return new Promise((resolve, reject)=>{
 
         });
-    },
-    getRepository: function(name){
+    }
+
+    getRepository(name){
         return new Promise((resolve, reject)=>{
             try{
                 var dFile = file.readFileSync(path.join(__dirname, `../${projectFolder}/repo/${name}`));
@@ -40,16 +44,17 @@ module.exports.RepositoryController = {
                 reject({code: errCode.REPO_GET_CODE , message: errCode.REPO_GET_MESSAGE, error: e});
             }
         });
-    },
-    getAllRepository: function(){
+    }
+
+    getAllRepository(){
        return new Promise((resolve, reject)=>{
-                try{
-                    var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/repo`));
-                    resolve({message: 'Process succeed', repos: result});
-                }catch(e){
-                    reject({code: errCode.REPO_ALL_CODE , message: errCode.REPO_All_MESSAGE, error: e});
-                }
-            });
-    },
+            try{
+                var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/repo`));
+                resolve({message: 'Process succeed', repos: result});
+            }catch(e){
+                reject({code: errCode.REPO_ALL_CODE , message: errCode.REPO_All_MESSAGE, error: e});
+            }
+        });
+    }
 
 }

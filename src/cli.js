@@ -3,38 +3,29 @@
 var os = require('os');
 var child_process = require ('child_process');
 var file = require('fs');
+var path = require('path');
 let DomainController = require('./controllers/DomainController').DomainController;
 let RepositoryController = require('./controllers/RepositoryController').RepositoryController;
+let GitController = require('./controllers/gitController').GitController;
+let errCode = require('./erroCode');
 
 let osP = os.platform();
 
 let CliController = {
     checkProject: function () {
         return new Promise((resolve, reject)=>{
-            let daasFile
-            try{
-                daasFile = file.readdirSync(__dirname+'/spring/daas');
-                resolve(daasFile);
-            }catch(e) {
-                reject(e);
-            }
+            file.readdir(path.join(__dirname, '/spring/daas'),(err,files)=>{
+                if(err){
+                    reject({code: errCode.NO_FOLDER_CODE , message: errCode.NO_FOLDER_MESSAGE, error: e});
+                }else{
+                    resolve({message: "Folder project exist", folder: files});
+                }
+            });
         });
     },
-
-    initProject: function(){
-        return new Promise((resolve, reject)=>{
-            try{
-                child_process.execSync(osP==='win32'?'init.bat' : 'bash ./init.sh',{
-                    cwd: __dirname+'/spring/'
-                });
-                resolve("Project initiated");
-            }catch(e){
-                reject(e);
-            }
-        });
-    },
-    domain: DomainController,
-    repo: RepositoryController,
+    git: new GitController(),
+    domain: new DomainController(),
+    database: new RepositoryController(),
 };
 
 module.exports.cli = CliController;
