@@ -57,7 +57,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
 }
 `
-
                     try{
                         var domainPath = path.join(__dirname, `../${projectFolder}/domain/${schema.name}.kt`);
                         var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`)
@@ -76,23 +75,25 @@ interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
 
     getDomain(name){
         return new Promise((resolve, reject)=>{
-            try{
-                var dFile = file.readFileSync(path.join(__dirname, `../${projectFolder}/domain/${name}`));
-                resolve({domain: dFile.toString()});
-            }catch(e){
-                reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e});
-            }
+            file.readFile(path.join(__dirname, `../${projectFolder}/domain/${name}`), (err, data)=>{
+                if(err){
+                    reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: err.toString()});
+                }else{
+                    resolve({domain: data.toString()});
+                }
+            });
         });
     }
 
     getAllDomain(){
         return new Promise((resolve, reject)=>{
-            try{
-                var result =  file.readdirSync(path.join(__dirname,`../${projectFolder}/domain`));
-                resolve({message: 'Process succeed', domains: result});
-            }catch(e){
-                reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: e.toString()});
-            }
+            file.readdir(path.join(__dirname,`../${projectFolder}/domain`),(error,files)=>{
+                if(error){
+                    reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: error.toString()});
+                }else{
+                    resolve({message: 'Process succeed', domains: files});
+                }
+            });
         });
     }
 
