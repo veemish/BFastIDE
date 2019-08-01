@@ -9,24 +9,36 @@ services:
     links: 
     - mdb
     - web
-    - daas
+    # - daas
     # faas
+    networks: 
+      bfast_net:
+        ipv4_address: 172.28.1.1
   web:
-    image: nginx
+    build: ./lib/webRuntime/
     ports: 
-    - "8080:80"
+    - "80:80"
+    - "443:443"
     restart: always
+    networks: 
+      bfast_net:
+        ipv4_address: 172.28.1.2
   mdb:
     image: mongo
     volumes:
     - mdbdata:/var/data
     restart: always
-  daas:
-    image: ubuntu:bionic
-    working_dir: /daas
-    restart: always
-    volumes: 
-    - daasdata:/daas
+    networks: 
+      bfast_net:
+        ipv4_address: 172.28.1.3
+  # daas:
+  #   build: ./lib/daasRuntime
+  #   restart: always
+  #   volumes: 
+  #   - daasdata:/daas
+  #   networks: 
+  #     bfas_net:
+  #       ipv4_address: 172.28.1.4
   # faas:
   #   image: ubuntu:bionic
   #   restart: always
@@ -37,4 +49,10 @@ volumes:
   mdbdata: {}
   daasdata: {}
   faasdata: {}
+networks: 
+  bfast_net:
+    ipam: 
+      driver: default
+      config: 
+        - subnet: 172.28.0.0/16
   
