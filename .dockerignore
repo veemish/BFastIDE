@@ -11,3 +11,4 @@ composeDeploy.sh
 docker-compose.yml
 Dockerfile
 src/spring/daas
+lib

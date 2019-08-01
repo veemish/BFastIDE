@@ -6,7 +6,7 @@ var file = require('fs');
 var path = require('path');
 let DomainController = require('./controllers/DomainController').DomainController;
 let RepositoryController = require('./controllers/RepositoryController').RepositoryController;
-let GitController = require('./controllers/gitController').GitController;
+let GitController = require('./controllers/GitController').GitController;
 let errCode = require('./erroCode');
 
 let osP = os.platform();

@@ -1,30 +1,40 @@
 version: '3'
 services: 
-  web:
+  ide:
     build: .
-    ports:
-    - "5000:3000"
     volumes: 
-    - apiData:/daas/src/spring
+    - idedata:/ide/src/spring
+    # - faasdata:/faas
     restart: always
     links: 
     - mdb
-    # - daas
+    - web
+    - daas
+    # faas
+  web:
+    image: nginx
+    ports: 
+    - "8080:80"
+    restart: always
   mdb:
     image: mongo
     volumes:
-    - daaSDbData:/var/data
+    - mdbdata:/var/data
     restart: always
-  # daas:
-  #   image: openjdk:8
-  #   ports: 
-  #   - "6000:8080"
+  daas:
+    image: ubuntu:bionic
+    working_dir: /daas
+    restart: always
+    volumes: 
+    - daasdata:/daas
+  # faas:
+  #   image: ubuntu:bionic
   #   restart: always
   #   volumes: 
-  #   - daaSData:~/
+  #   - faasdata:/faas
 volumes: 
-  apiData: {}
-  daaSData: {}
-  daaSDbData:
-
-
+  idedata: {}
+  mdbdata: {}
+  daasdata: {}
+  faasdata: {}
+  

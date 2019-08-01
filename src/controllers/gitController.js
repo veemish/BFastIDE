@@ -3,13 +3,10 @@
 var os = require('os');
 var child_process = require ('child_process');
 var fs = require('fs');
-var process = require( 'process');
 var path = require('path');
 var errCode = require('../erroCode');
-var repoController = require('./RepositoryController');
 
 let osP = os.platform();
-let projectFolder = '/spring/daas/src/main/kotlin/com/fahamutech/daas';
 
 module.exports.GitController = class {
 

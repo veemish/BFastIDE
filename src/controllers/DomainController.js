@@ -37,9 +37,12 @@ module.exports.DomainController = class {
 let domainInKotlin = `
 package com.fahamutech.daas.domain
 
-import com.fahamutech.daas.common.*
+import com.fahamutech.daas.common.
 import org.springframework.data.annotation.*
 import org.springframework.data.mongodb.core.index.*
+import org.springframework.data.domain.*
+import org.springframework.data.geo.*
+import java.util.*
 
 class ${schema.name} : ${schema.parent}(){
     ${domainFields}
@@ -52,6 +55,7 @@ import com.fahamutech.daas.domain.${schema.name}
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.*
 
 @CrossOrigin(origins = ["*"])
 interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
