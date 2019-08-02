@@ -13,7 +13,7 @@ module.exports.SchemaController = class {
                 if(err){
                     reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: err.toString()});
                 }else{
-                    resolve({domain: data.toString()});
+                    resolve({schema: data.toString()});
                 }
             });
         });
@@ -25,7 +25,7 @@ module.exports.SchemaController = class {
                 if(error){
                     reject({code: errCode.DOMAIN_ALL_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: error.toString()});
                 }else{
-                    resolve({message: 'Process succeed', domains: files});
+                    resolve({message: 'Process succeed', schemas: files});
                 }
             });
         });
