@@ -1,15 +1,12 @@
 'use strict'
 
-var os = require('os');
-var child_process = require ('child_process');
 var file = require('fs');
 var path = require('path');
 let DomainController = require('./controllers/DomainController').DomainController;
 let RepositoryController = require('./controllers/RepositoryController').RepositoryController;
 let GitController = require('./controllers/GitController').GitController;
+let SchemaController = require('./controllers/SchemaController').SchemaController;
 let errCode = require('./erroCode');
-
-let osP = os.platform();
 
 let CliController = {
     checkProject: function () {
@@ -26,6 +23,7 @@ let CliController = {
     git: new GitController(),
     domain: new DomainController(),
     database: new RepositoryController(),
+    schema: new SchemaController(),
 };
 
 module.exports.cli = CliController;

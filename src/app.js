@@ -7,6 +7,7 @@ var indexRouter = require('./routes/index');
 var domainRouter = require('./routes/domain');
 var repoRouter = require('./routes/repo');
 var projectRouter = require('./routes/project');
+var schemaRouter = require('./routes/schema');
 
 var app = express();
 
@@ -18,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/domain', domainRouter);
+app.use('/schema', schemaRouter);
 app.use('/project', projectRouter);
 app.use('/repo', repoRouter);
 
