@@ -1,9 +1,6 @@
 'use strict'
 
-var os = require('os');
-var child_process = require ('child_process');
 var file = require('fs');
-var process = require( 'process');
 var path = require('path');
 var errCode = require('../erroCode');
 
@@ -13,26 +10,51 @@ module.exports.RepositoryController = class {
 
     createRepository(schema){
         return new Promise((resolve, reject)=>{
+            if(schema){
+                reject({code: errCode.REPO_CREATE_CODE,  message: errCode.REPO_CREATE_MESSAGE});
+            }else{
+let repositoryInKotlin = `
+package com.fahamutech.daas.domain
 
+import com.fahamutech.daas.domain.*
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import java.util.*
+
+@CrossOrigin(origins = ["*"])
+interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
+}`
+                var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`);
+                file.writeFile(repoPath, repositoryInKotlin, (err)=>{
+                    if(err){
+                        reject({code: errCode.SCHEMA_CREATE_CODE,  message: errCode.SCHEMA_CREATE_MESSAGE, err: err.toString()});
+                    }else{
+                        resolve({message: 'Schema saved'});
+                    }
+                });
+            }
         });
     }
 
     updateRepository(schema){
-        return new Promise((resolve, reject)=>{
-
-        });
+       this.createRepository(schema);
     }
 
-    deleteRepository(schema){
+    deleteRepository(name){
         return new Promise((resolve, reject)=>{
-
+            file.unlink(path.join(__dirname, `../${projectFolder}/domain/${name}`), (err)=>{
+                if(err){
+                    reject({code: errCode.REPO_DELETE_CODE, message: errCode.REPO_DELETE_MESSAGE, error: err.toString()});
+                }else{
+                    resolve({message:  `Repository with name  : ${name} deleted`});
+                }
+            })
         });
     }
 
     patchRepository(schema){
-        return new Promise((resolve, reject)=>{
-
-        });
+        this.createRepository(schema);
     }
 
     getRepository(name){

@@ -23,7 +23,17 @@ let errorCode = {
     GIT_REMOTE_DELETE_CODE: 201,
     GIT_REMOTE_DELETE_MESSAGE: "Fail to delete remote repository",
     GIT_REMOTE_PUSH_CODE: 202,
-    GIT_REMOTE_PUSH_MESSAGE: "Fail to push to remote repository"
+    GIT_REMOTE_PUSH_MESSAGE: "Fail to push to remote repository",
+    SCHEMA_CREATE_CODE: 203,
+    SCHEMA_CREATE_MESSAGE: 'Schema JSON is required',
+    REPO_CREATE_CODE: 204,
+    REPO_CREATE_MESSAGE: 'Fails to create repository',
+    SCHEMA_DELETE_CODE: 205,
+    SCHEMA_DELETE_MESSAGE: 'Fails to delete schema',
+    DOMAIN_DELETE_CODE: 206,
+    DOMAIN_DELETE_MESSAGE: 'Fails to delete a domain',
+    REPO_DELETE_CODE: 207,
+    REPO_DELETE_MESSAGE: 'Fails to delete a repository',
 }
 
 module.exports = errorCode;

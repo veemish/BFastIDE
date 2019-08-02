@@ -3,7 +3,6 @@
 var express = require('express');
 var router = express.Router();
 var cli = require('../cli').cli;
-var errCode = require('../erroCode');
 
 router.get('/', function(request, response){
     cli.domain.getAllDomain()
@@ -31,7 +30,16 @@ router.get('/:name', function(request, response){
         response.json(domain);
     })
     .catch(reason=>{
-        // console.log(reason);
+        response.status(401).json(reason);
+    })
+});
+
+router.delete('/:name', function(request, response){
+    cli.domain.deleteDomain(request.params.name)
+    .then(domain=>{
+        response.json(domain);
+    })
+    .catch(reason=>{
         response.status(401).json(reason);
     })
 });
