@@ -38,7 +38,7 @@ module.exports.DomainController = class {
 let domainInKotlin = `
 package com.fahamutech.daas.domain
 
-import com.fahamutech.daas.common.
+import com.fahamutech.daas.common.*
 import org.springframework.data.annotation.*
 import org.springframework.data.mongodb.core.index.*
 import org.springframework.data.domain.*
