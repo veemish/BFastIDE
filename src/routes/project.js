@@ -4,8 +4,8 @@ var express = require('express');
 var router = express.Router();
 var cli = require('../cli').cli;
 
-router.get('/', function(request, response){
-    cli.checkProject()
+router.get('/check/folder', function(request, response){
+    cli.project.getProjectFolder()
     .then(value=>{
         response.json(value);
     })
@@ -14,8 +14,18 @@ router.get('/', function(request, response){
     });
 });
 
+router.get('/check/git', function(request, response){
+    cli.project.getGitFolder()
+    .then(value=>{
+        response.json(value);
+    })
+    .catch(reason=>{
+        response.status(401).json(reason);
+    })
+});
+
 router.get('/init', function(request, response){
-    cli.git.clone({replace: request.query.replace})
+    cli.project.initializeProject({replace: request.query.replace})
     .then(result=>{
         response.json(result);
     })
@@ -25,7 +35,7 @@ router.get('/init', function(request, response){
 });
 
 router.get('/update', function(request, response){
-    cli.git.update()
+    cli.project.updateProjectFolder()
     .then(value=>{
         response.json(value);
     })

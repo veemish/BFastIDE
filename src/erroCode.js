@@ -34,6 +34,8 @@ let errorCode = {
     DOMAIN_DELETE_MESSAGE: 'Fails to delete a domain',
     REPO_DELETE_CODE: 207,
     REPO_DELETE_MESSAGE: 'Fails to delete a repository',
+    GIT_FOLDER_GET_CODE: 208,
+    GIT_FOLDER_GET_MESSAGE: 'Fail to get a git project folder'
 }
 
 module.exports = errorCode;

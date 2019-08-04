@@ -16,7 +16,7 @@ module.exports.GitController = class {
      * method to create cloan a bootsrap project.
      * when option object is present with replace = truen
      * will remove the project and replace it
-     * @param {replace: boolean} options 
+     * @param {replace: string} options 
      */
     clone(options) {
         return new Promise((resolve, reject)=>{
