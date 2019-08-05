@@ -64,17 +64,17 @@ module.exports.GitController = class {
     addRemote(name, url){
         return new Promise((resolve, reject)=>{
             if(name && name !=='origin' && url){
-                child_process.exec(`git remote add ${name} ${url}`,{
+                child_process.exec(`git remote rm ${name} || git remote add ${name} ${url}`,{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
                         reject({code: errCode.GIT_REMOTE_ADD_CODE , message: errCode.GIT_REMOTE_ADD_MESSAGE, error: stderr.toString()});
                     }else{
-                        resolve({message: stdout.toString()})
+                        resolve({message: stdout.toString()});
                     }
                 });
             }else{
-                reject({code: errCode.GIT_REMOTE_ADD_CODE, message: errCode.GIT_REMOTE_ADD_MESSAGE, error: 'Try to add readonly remote repository'});
+                reject({code: errCode.GIT_REMOTE_ADD_CODE, message: errCode.GIT_REMOTE_ADD_MESSAGE, error: 'Try to add other name than origin'});
             }
         });
     }
@@ -114,7 +114,7 @@ module.exports.GitController = class {
     pushRemote(name){
         return new Promise((resolve, reject)=>{
             if(name && name!=='origin'){ 
-                child_process.exec('git config --global user.name="DaaS User" && git config --global user.email="user@daas.bfast.com"',{
+                child_process.exec('git config --global user.name="daas" && git config --global user.email="user@daas.bfast.com"',{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){

@@ -1,7 +1,9 @@
 'use strict'
 
 const MongoClient = require('mongodb').MongoClient;
+let GitController = require('./GitController').GitController;
 
+const gitController = new GitController();
 const url = 'mongodb://mdb:27017/_BFastIde';
 const client = new MongoClient(url);
 // if(!client.isConnected){
@@ -32,30 +34,33 @@ module.exports.DatabaseController = class {
     saveGitPushSettings(settings){
         return new Promise((resolve, reject)=>{
             if(settings && settings.name && settings.url){
-                if(settings.sId){
-                    delete settings.sId;
-                }
-                settings.sId = 'gitRemote';
-                client.db().collection('settings')
-                    .updateOne(
-                        {
-                            sId: 'gitRemote'
-                        },
-                        settings,
-                        {
-                            upsert: true
-                        }
-                    ).then(va1=>{
-                        resolve(va1);
-                    }).catch(reason1=>{
-                        reject({code: -1, message: 'Fails to save git settings', error: reason1});
-                    });
-                // client.connect()
-                // .then(conn=>{
-                    
-                // }).catch(reason=>{
-                //     reject({code: -1, message: 'Fail to get database connection', error: reason});
-                // });
+                gitController.addRemote(settings.name, settings.url)
+                .then(value=>{
+                    console.log(value);
+                    if(settings.sId){
+                        delete settings.sId;
+                    }
+                    settings.sId = 'gitRemote';
+                    client.db().collection('settings')
+                        .updateOne(
+                            {
+                                sId: 'gitRemote'
+                            },
+                            {
+                                $set: settings
+                            },
+                            {
+                                upsert: true
+                            }
+                        ).then(va1=>{
+                            resolve(va1);
+                        }).catch(reason1=>{
+                            reject({code: -1, message: 'Fails to save git settings', error: reason1});
+                        });
+                })
+                .catch(reason=>{
+                    reject(reason);
+                });
             }else{
                 reject({code: -1, message: 'Settings object is required'});
             }
