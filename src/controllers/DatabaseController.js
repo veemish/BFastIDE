@@ -4,23 +4,26 @@ const MongoClient = require('mongodb').MongoClient;
 
 const url = 'mongodb://mdb:27017/_BFastIde';
 const client = new MongoClient(url);
+// if(!client.isConnected){
+    client.connect({useNewUrlParser: true });
+// }
 
 module.exports.DatabaseController = class {
-    getConnection(){
-        return new Promise((resolve, reject)=>{
-            if(client.isConnected){
-                resolve(client.db());
-            }else{
-                client.connect()
-                .then(value=>{
-                    resolve(value.db());
-                })
-                .catch(reason=>{
-                    reject(reason);
-                });
-            }
-        });
-    }
+    // getConnection(){
+    //     return new Promise((resolve, reject)=>{
+    //         if(client.isConnected){
+    //             resolve(client.db());
+    //         }else{
+    //             client.connect()
+    //             .then(value=>{
+    //                 resolve(value.db());
+    //             })
+    //             .catch(reason=>{
+    //                 reject(reason);
+    //             });
+    //         }
+    //     });
+    // }
 
     /**
      * save push informations
@@ -33,9 +36,7 @@ module.exports.DatabaseController = class {
                     delete settings.sId;
                 }
                 settings.sId = 'gitRemote';
-                this.getConnection()
-                .then(db=>{
-                    db.collection('settings')
+                client.db().collection('settings')
                     .updateOne(
                         {
                             sId: 'gitRemote'
@@ -47,11 +48,14 @@ module.exports.DatabaseController = class {
                     ).then(va1=>{
                         resolve(va1);
                     }).catch(reason1=>{
-                        reject(reason1);
+                        reject({code: -1, message: 'Fails to save git settings', error: reason1});
                     });
-                }).catch(reason=>{
-                    reject(reason);
-                });
+                // client.connect()
+                // .then(conn=>{
+                    
+                // }).catch(reason=>{
+                //     reject({code: -1, message: 'Fail to get database connection', error: reason});
+                // });
             }else{
                 reject({code: -1, message: 'Settings object is required'});
             }
@@ -60,19 +64,21 @@ module.exports.DatabaseController = class {
 
     getGitPushSettings(){
         return new Promise((resolve, reject)=>{
-            this.getConnection()
-            .then(db=>{
-                db.collection('settings')
+            client.db().collection('settings')
                 .findOne({
                     sId: 'gitRemote'
                 }).then(va1=>{
                     resolve(va1);
                 }).catch(reason1=>{
-                    reject(reason1);
+                    console.log(reason1);
+                    reject({code: -1, message: 'Fail to get git settings', error: reason1});
                 });
-            }).catch(reason=>{
-                reject(reason);
-            });
+            // .then(conn=>{
+                
+            // }).catch(reason=>{
+            //     console.log(reason);
+            //     reject({code: -1, message: 'Fail to get database connection', error: reason});
+            // });
         });
     }
 }
