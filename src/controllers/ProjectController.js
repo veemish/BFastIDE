@@ -69,4 +69,26 @@ module.exports.ProjectController = class{
             })
         });
     }
+
+    exportToZip(options){
+        return new Promise((resolve, reject)=>{
+            if(options && options.database){
+                process.exec('cp -r /ide/mdb /ide/src/spring && zip -r app.zip /ide/src/spring',(error,stdout,stderr)=>{
+                    if(error){
+                        reject({code: -1, message: stderr, error: error});
+                    }else{
+                        resolve({message: stdout});
+                    }
+                });
+            }else{
+                process.exec('rm -r /ide/src/spring/data && zip -r app.zip /ide/src/spring',(error,stdout,stderr)=>{
+                    if(error){
+                        reject({code: -1, message: stderr, error: error});
+                    }else{
+                        resolve({message: stdout});
+                    }
+                });
+            }
+        });
+    }
 }

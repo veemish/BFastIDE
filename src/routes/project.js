@@ -44,4 +44,14 @@ router.get('/update', function(request, response){
     });
 });
 
+router.get('/export', function(request, response){
+    cli.project.exportToZip()
+    .then(_=>{
+        response.sendFile('/ide/src/spring/app.zip');
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    });
+});
+
 module.exports = router;

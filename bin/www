@@ -5,9 +5,21 @@
  */
 
 var app = require('../src/app');
-var cli = require('../src/cli').cli;
+// var cli = require('../src/cli').cli;
 var debug = require('debug')('daascli:server');
 var http = require('http');
+
+// cli.git.clone().then(value=>{
+//   console.log(value);
+// }).catch(reason=>{
+//   console.log(reason);
+// });
+
+// cli.project.build().then(value=>{
+//   console.log(value);
+// }).catch(reason=>{
+//   console.log(reason);
+// });
 
 /**
  * Get port from environment and store in Express.
@@ -82,18 +94,10 @@ function onError(error) {
  * Event listener for HTTP server "listening" event.
  */
 
-async function onListening() {
+function onListening() {
   var addr = server.address();
   var bind = typeof addr === 'string'
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
-  // run post strat scripts
-  try{
-    const cRes = await cli.git.clone();
-    const bRes = await cli.project.build();
-    console.log(bRes);
-  }catch(e){
-    console.log(e);
-  }
 }
