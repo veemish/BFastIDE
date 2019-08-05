@@ -2,6 +2,7 @@
 
 var file = require('fs');
 var path = require('path');
+var process = require('child_process');
 var nodeGit = require('nodegit');
 var errCode = require('../erroCode');
 var GitController = require('./GitController').GitController;
@@ -53,5 +54,19 @@ module.exports.ProjectController = class{
      */
     updateProjectFolder(){
         return gitController.update();
+    }
+
+    build(){
+        return new Promise((resolve, reject)=>{
+            process.exec('bash gradlew build', {
+                cwd: path.join(__dirname, '../spring/daas')
+            }, (error,stdout,stderr)=>{
+                if(error){
+                    reject({code: -1 , message: stderr , error: error});
+                }else{
+                    resolve({message: stdout});
+                }
+            })
+        });
     }
 }
