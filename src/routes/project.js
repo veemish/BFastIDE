@@ -60,4 +60,44 @@ router.get('/export', function(request, response){
     });
 });
 
+router.get('/remote', function(request, response){
+    cli.database.getGitPushSettings()
+    .then(settings=>{
+        response.json(settings);
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    });
+});
+
+router.post('/remote', function(request, response){
+    cli.database.saveGitPushSettings(request.body)
+    .then(settings=>{
+        response.json(settings);
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    });
+});
+
+router.get('/remote/push/:name', function(request, response){
+    cli.git.pushRemote(request.params.name)
+    .then(value=>{
+        response.json(value);
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    });
+});
+
+router.get('/remote/pull/:name', function(request, response){
+    cli.git.pullRemote(request.params.name)
+    .then(value=>{
+        response.json(value);
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    });
+});
+
 module.exports = router;

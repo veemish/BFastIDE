@@ -22,32 +22,39 @@ module.exports.DatabaseController = class {
         });
     }
 
-
     /**
      * save push informations
      * @param {name: 'gitRemote', url: string, name: string } settings 
      */
     saveGitPushSettings(settings){
         return new Promise((resolve, reject)=>{
-            this.getConnection()
-            .then(db=>{
-                db.collection('settings')
-                .updateOne(
-                    {
-                        name: 'gitRemote'
-                    },
-                    settings,
-                    {
-                        upsert: true
-                    }
-                ).then(va1=>{
-                    resolve(va1);
-                }).catch(reason1=>{
-                    reject(reason1);
+            if(settings && settings.name && settings.url){
+                if(settings.sId){
+                    delete settings.sId;
+                }
+                settings.sId = 'gitRemote';
+                this.getConnection()
+                .then(db=>{
+                    db.collection('settings')
+                    .updateOne(
+                        {
+                            sId: 'gitRemote'
+                        },
+                        settings,
+                        {
+                            upsert: true
+                        }
+                    ).then(va1=>{
+                        resolve(va1);
+                    }).catch(reason1=>{
+                        reject(reason1);
+                    });
+                }).catch(reason=>{
+                    reject(reason);
                 });
-            }).catch(reason=>{
-                reject(reason);
-            });
+            }else{
+                reject({code: -1, message: 'Settings object is required'});
+            }
         });
     }
 
@@ -57,7 +64,7 @@ module.exports.DatabaseController = class {
             .then(db=>{
                 db.collection('settings')
                 .findOne({
-                    name: 'gitRemote'
+                    sId: 'gitRemote'
                 }).then(va1=>{
                     resolve(va1);
                 }).catch(reason1=>{

@@ -5,6 +5,7 @@ let RepositoryController = require('./controllers/RepositoryController').Reposit
 let GitController = require('./controllers/GitController').GitController;
 let SchemaController = require('./controllers/SchemaController').SchemaController;
 let ProjectController = require('./controllers/ProjectController').ProjectController;
+let DatabaseController = require('./controllers/DatabaseController').DatabaseController;
 
 let CliController = {
     project: new ProjectController(),
@@ -12,6 +13,7 @@ let CliController = {
     domain: new DomainController(),
     database: new RepositoryController(),
     schema: new SchemaController(),
+    database: new DatabaseController(),
 };
 
 module.exports.cli = CliController;
