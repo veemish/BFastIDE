@@ -81,7 +81,7 @@ module.exports.ProjectController = class{
                     }
                 });
             }else{
-                process.exec('rm -r /ide/src/spring/data && zip -r app.zip /ide/src/spring',(error,stdout,stderr)=>{
+                process.exec('rm -r /ide/src/spring/data || zip -r app.zip /ide/src/spring',(error,stdout,stderr)=>{
                     if(error){
                         reject({code: -1, message: stderr, error: error});
                     }else{
