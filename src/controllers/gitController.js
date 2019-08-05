@@ -64,10 +64,10 @@ module.exports.GitController = class {
     addRemote(name, url, username, token){
         return new Promise((resolve, reject)=>{
             if(name && name !=='origin' && url && username && token){
-                const urlWithCredential = url.replace('https"//',`https://${username}:${token}`);
+                var urlWithCredential = url.toString().replace('https://',`https://${username}:${token}@`);
                 child_process.exec(
 `
-git config --global user.name "bFastUser" && git config --global user.email "user@daas.bfast.com" && git remote rm ${name} || git remote add ${name} ${urlWithCredential}
+git config --global user.name "bFastUser" && git config --global user.email "user@daas.bfast.com" && git remote rm ${name} || git remote add ${name} '${urlWithCredential}'
 `,              {
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
@@ -117,25 +117,21 @@ git config --global user.name "bFastUser" && git config --global user.email "use
 
     pushRemote(options){
         return new Promise((resolve, reject)=>{
-            if(options && options.name && options.name!=='origin' && options.token){ 
-                child_process.exec('git fetch',{
+            if(options && options.name && options.name!=='origin'){ 
+                child_process.exec("git fetch || git add ./src/main/ || git commit -am'from bfast ide'",{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
                         // console.log(error);
                         reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                     }else{
-                        child_process.exec(
-`
-git add ./src/main/ && git commit -am'from bfast ide' && git push ${options.name} master "
-`,                      {
+                        child_process.exec(`git push ${options.name} master`,                      {
                             cwd: path.join(__dirname, "../spring/daas")
                         }, (error, stdout, stderr)=>{
                             if(error){
                                 // console.log(error);
                                 reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                             }else{
-                                console.log(stdout);
                                 resolve({message: stdout.toString()});
                             }
                         });
@@ -148,17 +144,21 @@ git add ./src/main/ && git commit -am'from bfast ide' && git push ${options.name
         });
     }
 
-    pullRemote(name){
+    pullRemote(options){
         return new Promise((resolve, reject)=>{
-            process.exec(`git fetch && git pull --allow-unrelated ${name} master`,{
-                cwd: path.join(__dirname, '../spring/daas')
-            }, (error,stdout,stderr)=>{
-                if(error){
-                    reject({code: -1, message: stderr, error: error.toString()});
-                }else{
-                    resolve({message: stdout});
-                }
-            });
+            if(options && options.name & options.name!=='origin'){
+                process.exec(`git fetch && git pull --allow-unrelated ${name} master`,{
+                    cwd: path.join(__dirname, '../spring/daas')
+                }, (error,stdout,stderr)=>{
+                    if(error){
+                        reject({code: -1, message: stderr, error: error.toString()});
+                    }else{
+                        resolve({message: stdout});
+                    }
+                });
+            }else{
+                reject({code: -1, message: 'Remote repositoty name is required'});
+            }
         });
     }
 
