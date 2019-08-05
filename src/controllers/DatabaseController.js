@@ -7,7 +7,7 @@ const gitController = new GitController();
 const url = 'mongodb://mdb:27017/_BFastIde';
 const client = new MongoClient(url);
 // if(!client.isConnected){
-    client.connect({useNewUrlParser: true });
+client.connect();
 // }
 
 module.exports.DatabaseController = class {
@@ -33,10 +33,10 @@ module.exports.DatabaseController = class {
      */
     saveGitPushSettings(settings){
         return new Promise((resolve, reject)=>{
-            if(settings && settings.name && settings.url){
-                gitController.addRemote(settings.name, settings.url)
+            if(settings && settings.name && settings.url && settings.username && settings.token){
+                gitController.addRemote(settings.name, settings.url, settings.username, settings.token)
                 .then(value=>{
-                    console.log(value);
+                    // console.log(value);
                     if(settings.sId){
                         delete settings.sId;
                     }
@@ -75,7 +75,7 @@ module.exports.DatabaseController = class {
                 }).then(va1=>{
                     resolve(va1);
                 }).catch(reason1=>{
-                    console.log(reason1);
+                    // console.log(reason1);
                     reject({code: -1, message: 'Fail to get git settings', error: reason1});
                 });
             // .then(conn=>{

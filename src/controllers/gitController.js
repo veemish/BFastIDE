@@ -61,10 +61,14 @@ module.exports.GitController = class {
         });
     }
 
-    addRemote(name, url){
+    addRemote(name, url, username, token){
         return new Promise((resolve, reject)=>{
-            if(name && name !=='origin' && url){
-                child_process.exec(`git remote rm ${name} || git remote add ${name} ${url}`,{
+            if(name && name !=='origin' && url && username && token){
+                const urlWithCredential = url.replace('https"//',`https://${username}:${token}`);
+                child_process.exec(
+`
+git config --global user.name "bFastUser" && git config --global user.email "user@daas.bfast.com" && git remote rm ${name} || git remote add ${name} ${urlWithCredential}
+`,              {
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
@@ -111,21 +115,27 @@ module.exports.GitController = class {
         });
     }
 
-    pushRemote(name){
+    pushRemote(options){
         return new Promise((resolve, reject)=>{
-            if(name && name!=='origin'){ 
-                child_process.exec('git config --global user.name="daas" && git config --global user.email="user@daas.bfast.com"',{
+            if(options && options.name && options.name!=='origin' && options.token){ 
+                child_process.exec('git fetch',{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
+                        // console.log(error);
                         reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                     }else{
-                        child_process.exec(`git add ./src/main/ && git commit -am'${message?message:'refresh'}' && git push ${name} master`,{
+                        child_process.exec(
+`
+git add ./src/main/ && git commit -am'from bfast ide' && git push ${options.name} master "
+`,                      {
                             cwd: path.join(__dirname, "../spring/daas")
                         }, (error, stdout, stderr)=>{
                             if(error){
+                                // console.log(error);
                                 reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                             }else{
+                                console.log(stdout);
                                 resolve({message: stdout.toString()});
                             }
                         });

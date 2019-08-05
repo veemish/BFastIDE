@@ -80,8 +80,8 @@ router.post('/remote', function(request, response){
     });
 });
 
-router.get('/remote/push/:name', function(request, response){
-    cli.git.pushRemote(request.params.name)
+router.post('/remote/push', function(request, response){
+    cli.git.pushRemote(request.body)
     .then(value=>{
         response.json(value);
     })
@@ -90,8 +90,8 @@ router.get('/remote/push/:name', function(request, response){
     });
 });
 
-router.get('/remote/pull/:name', function(request, response){
-    cli.git.pullRemote(request.params.name)
+router.post('/remote/pull', function(request, response){
+    cli.git.pullRemote(request.body)
     .then(value=>{
         response.json(value);
     })
