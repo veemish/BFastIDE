@@ -118,16 +118,21 @@ git config --global user.name "bFastUser" && git config --global user.email "use
     pushRemote(options){
         return new Promise((resolve, reject)=>{
             if(options && options.name && options.name!=='origin'){ 
-                child_process.exec("git fetch || git add ./src/main/ || git commit -am'from bfast ide'",{
+                child_process.exec(`git fetch || git add ./src/main/ || git commit -am"from bfast ide"`,{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
                         // console.log(error);
+                        // console.log(stderr);
+                        // console.log(stdout);
                         reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                     }else{
-                        child_process.exec(`git push ${options.name} master`,                      {
+                        child_process.exec(`git config --global user.name "bFastUser" && git config --global user.email "user@daas.bfast.com" && git push ${options.name} master`,                      {
                             cwd: path.join(__dirname, "../spring/daas")
                         }, (error, stdout, stderr)=>{
+                            // console.log(error);
+                            // console.log(stdout);
+                            // console.log(stderr);
                             if(error){
                                 // console.log(error);
                                 reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
@@ -146,10 +151,14 @@ git config --global user.name "bFastUser" && git config --global user.email "use
 
     pullRemote(options){
         return new Promise((resolve, reject)=>{
-            if(options && options.name & options.name!=='origin'){
-                process.exec(`git fetch && git pull --allow-unrelated ${name} master`,{
+            if(options && options.name){
+                /// console.log(options);
+                child_process.exec(`git fetch || git pull --allow-unrelated ${options.name} master`,{
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error,stdout,stderr)=>{
+                    // console.log(error);
+                    // console.log(stdout);
+                    // console.log(stderr);
                     if(error){
                         reject({code: -1, message: stderr, error: error.toString()});
                     }else{
