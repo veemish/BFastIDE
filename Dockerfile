@@ -9,7 +9,7 @@ RUN apt-get install -y openjdk-8-jdk
 RUN apt-get install -y zip
 COPY . ./
 # RUN bash /ide/src/spring/init.sh
-RUN git clone  https://github.com/fahamutech/daas.git /ide/src/spring/daas
+# RUN git clone  https://github.com/fahamutech/daas.git /ide/src/spring/daas
 # RUN bash /ide/src/spring/daas/gradlew build
 # #RUN bash /ide/src/spring/daas/gradlew bootJar
 

@@ -2,7 +2,8 @@
 
 var os = require('os');
 var child_process = require ('child_process');
-var fs = require('fs');
+// var fs = require('fs');
+// var nodeGit = require('nodegit');
 var path = require('path');
 var errCode = require('../erroCode');
 
@@ -110,23 +111,44 @@ module.exports.GitController = class {
         });
     }
 
-    pushRemote(name, branch, message){
+    pushRemote(name){
         return new Promise((resolve, reject)=>{
-            if(name && name!=='origin'){
-                child_process.execSync('git config --global user.name="DaaS User" && git config --global user.email="user@daas.bfast.com"');
-                child_process.exec(`git add ./src/main/ && git commit -am'${message?message:'refresh'}' && git push ${name} ${branch}`,{
-                    cwd: path.join(__dirname, "../spring/daas")
+            if(name && name!=='origin'){ 
+                child_process.exec('git config --global user.name="DaaS User" && git config --global user.email="user@daas.bfast.com"',{
+                    cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
                         reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                     }else{
-                        resolve({message: stdout.toString()});
+                        child_process.exec(`git add ./src/main/ && git commit -am'${message?message:'refresh'}' && git push ${name} master`,{
+                            cwd: path.join(__dirname, "../spring/daas")
+                        }, (error, stdout, stderr)=>{
+                            if(error){
+                                reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
+                            }else{
+                                resolve({message: stdout.toString()});
+                            }
+                        });
                     }
                 });
             }else{
                 reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE,
                      error: "Either name or branch parameter is not included and make sure name not equal to 'origin'"});
             }
+        });
+    }
+
+    pullRemote(name){
+        return new Promise((resolve, reject)=>{
+            process.exec(`git fetch && git pull --allow-unrelated ${name} master`,{
+                cwd: path.join(__dirname, '../spring/daas')
+            }, (error,stdout,stderr)=>{
+                if(error){
+                    reject({code: -1, message: stderr, error: error.toString()});
+                }else{
+                    resolve({message: stdout});
+                }
+            });
         });
     }
 

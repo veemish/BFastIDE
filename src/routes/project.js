@@ -47,7 +47,13 @@ router.get('/update', function(request, response){
 router.get('/export', function(request, response){
     cli.project.exportToZip()
     .then(_=>{
-        response.sendFile('/ide/src/spring/app.zip');
+        response.sendFile('/ide/app.zip', (err)=>{
+            if(err){
+                console.log(err);
+            }else{
+                console.log('Done exporting a project');
+            }
+        });
     })
     .catch(reason=>{
         response.status(503).json(reason);
