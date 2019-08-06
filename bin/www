@@ -5,21 +5,10 @@
  */
 
 var app = require('../src/app');
-// var cli = require('../src/cli').cli;
+var cli = require('../src/cli').cli;
+var WebSocketServer = require('websocket').server;
 var debug = require('debug')('daascli:server');
 var http = require('http');
-
-// cli.git.clone().then(value=>{
-//   console.log(value);
-// }).catch(reason=>{
-//   console.log(reason);
-// });
-
-// cli.project.build().then(value=>{
-//   console.log(value);
-// }).catch(reason=>{
-//   console.log(reason);
-// });
 
 /**
  * Get port from environment and store in Express.
@@ -101,3 +90,24 @@ function onListening() {
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
 }
+
+/**
+ * Websocket server
+ */
+var wsServer = new WebSocketServer({
+  httpServer: server,
+});
+
+wsServer.on('request', function(request){
+  const headers = request.httpRequest.headers;
+  console.log(headers);
+
+  const connection = request.accept('logs');
+  console.log((new Date() + 'Ws Connection accepted.'));
+  connection.on('messages', function(messages){
+    connection.sendUTF(messages);
+  });
+  connection.on('close',(code, desc)=>{
+    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+  });
+});

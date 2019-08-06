@@ -13,6 +13,7 @@
     "mongodb": "^3.3.0-beta2",
     "morgan": "~1.9.1",
     "nodegit": "^0.24.3",
-    "nodemon": "^1.19.1"
+    "nodemon": "^1.19.1",
+    "websocket": "^1.0.29"
   }
 }

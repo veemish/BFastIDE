@@ -70,6 +70,20 @@ module.exports.ProjectController = class{
         });
     }
 
+    bootJar(){
+        return new Promise((resolve, reject)=>{
+            process.exec('bash gradlew bootJar', {
+                cwd: path.join(__dirname, '../spring/daas')
+            }, (error,stdout,stderr)=>{
+                if(error){
+                    reject({code: -1 , message: stderr , error: error});
+                }else{
+                    resolve({message: stdout});
+                }
+            })
+        });
+    }
+
     exportToZip(options){
         return new Promise((resolve, reject)=>{
             if(options && options.database){
