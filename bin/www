@@ -94,20 +94,21 @@ function onListening() {
 /**
  * Websocket server
  */
-var wsServer = new WebSocketServer({
+var webSocketServer = new WebSocketServer({
   httpServer: server,
 });
 
-wsServer.on('request', function(request){
-  const headers = request.httpRequest.headers;
-  console.log(headers);
-
+webSocketServer.on('request', function(request){
   const connection = request.accept('logs');
-  console.log((new Date() + 'Ws Connection accepted.'));
-  connection.on('messages', function(messages){
-    connection.sendUTF(messages);
-  });
-  connection.on('close',(code, desc)=>{
-    console.log((new Date()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+  console.log((new Date().toString()) + 'Ws Connection accepted.');
+  connection.on('message', function(message){
+    if(message.type === 'utf8' && message.utf8Data === 'build'){
+      cli.project.build(connection);
+    }else if(message.type === 'utf8' && message.utf8Data.startsWith('run://')){
+      cli.project.run(connection, message.utf8Data.replace('run://',''));
+    }else{
+      connection.sendUTF('I do not understand what to do');
+      connection.close();
+    }
   });
 });

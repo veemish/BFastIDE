@@ -56,31 +56,65 @@ module.exports.ProjectController = class{
         return gitController.update();
     }
 
-    build(){
-        return new Promise((resolve, reject)=>{
-            process.exec('bash gradlew build', {
-                cwd: path.join(__dirname, '../spring/daas')
-            }, (error,stdout,stderr)=>{
-                if(error){
-                    reject({code: -1 , message: stderr , error: error});
-                }else{
-                    resolve({message: stdout});
-                }
-            })
+    /**
+     * 
+     * @param {its a web socket connection } connection 
+     */
+    build(connection){
+        let buildProcess = process.exec('bash gradlew build',{
+            cwd: path.join(__dirname, '../spring/daas/')
+        });
+        buildProcess.stdout.on('data',(data)=>{
+            // console.log(data);
+            connection.sendUTF(data);
+        });
+        buildProcess.stderr.on('data', (data)=>{
+            connection.sendUTF(data);
+            connection.close();
+        });
+        buildProcess.on('close', (code)=>{
+            connection.sendUTF('==========TERMINAL CLOSED=========');
+            connection.close();
+        });
+
+        buildProcess.on('exit', (code)=>{
+            connection.close();
+        });
+
+        connection.on('close',(code, desc)=>{
+            console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+            if(buildProcess){
+                buildProcess.kill('SIGSTOP');
+            }
         });
     }
+    
+    run(connection, command){
+        let buildProcess = process.exec(command,{
+            cwd: path.join(__dirname, '../spring/daas/')
+        });
+        buildProcess.stdout.on('data',(data)=>{
+            // console.log(data);
+            connection.sendUTF(data);
+        });
+        buildProcess.stderr.on('data', (data)=>{
+            connection.sendUTF(data);
+            connection.close();
+        });
+        buildProcess.on('close', (code)=>{
+            connection.sendUTF('==========TERMINAL CLOSED=========');
+            connection.close();
+        });
 
-    bootJar(){
-        return new Promise((resolve, reject)=>{
-            process.exec('bash gradlew bootJar', {
-                cwd: path.join(__dirname, '../spring/daas')
-            }, (error,stdout,stderr)=>{
-                if(error){
-                    reject({code: -1 , message: stderr , error: error});
-                }else{
-                    resolve({message: stdout});
-                }
-            })
+        buildProcess.on('exit', (code)=>{
+            connection.close();
+        });
+
+        connection.on('close',(code, desc)=>{
+            console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
+            if(buildProcess){
+                buildProcess.kill('SIGSTOP');
+            }
         });
     }
 

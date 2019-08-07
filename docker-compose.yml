@@ -6,6 +6,8 @@ services:
     - idedata:/ide/src/spring
     - mdbdata:/ide/mdb/data:ro
     # - faasdata:/faas
+    ports: 
+    - "55017:3000"
     restart: always
     networks: 
       bfast_net:

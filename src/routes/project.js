@@ -100,24 +100,24 @@ router.post('/remote/pull', function(request, response){
     });
 });
 
-router.post('/build', function(request, response){
-    cli.project.build()
-    .then(value=>{
-        response.json(value);
-    })
-    .catch(reason=>{
-        response.status(503).json(reason);
-    });
-});
+// router.post('/build', function(request, response){
+//     cli.project.build()
+//     .then(value=>{
+//         response.json(value);
+//     })
+//     .catch(reason=>{
+//         response.status(503).json(reason);
+//     });
+// });
 
-router.post('/build/jar', function(request, response){
-    cli.project.build()
-    .then(value=>{
-        response.json(value);
-    })
-    .catch(reason=>{
-        response.status(503).json(reason);
-    });
-});
+// router.post('/build/jar', function(request, response){
+//     cli.project.build()
+//     .then(value=>{
+//         response.json(value);
+//     })
+//     .catch(reason=>{
+//         response.status(503).json(reason);
+//     });
+// });
 
 module.exports = router;
