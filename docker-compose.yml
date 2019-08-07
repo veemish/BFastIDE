@@ -15,11 +15,11 @@ services:
   web:
     build: ./services/webRuntime/
     ports: 
-    - "80:80"
+    - "7000:80"
     - "443:443"
     restart: always
-    volumes: 
-      - webdata:'/'
+    # volumes: 
+    #   - webdata:'/etc'
     networks: 
       bfast_net:
         ipv4_address: 172.28.1.2
