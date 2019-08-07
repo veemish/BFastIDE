@@ -18,8 +18,8 @@ services:
     - "80:80"
     - "443:443"
     restart: always
-    volumes: 
-      - webdata:'/'
+    # volumes: 
+    #   - webdata:'/'
     networks: 
       bfast_net:
         ipv4_address: 172.28.1.2
