@@ -84,7 +84,7 @@ module.exports.ProjectController = class{
         connection.on('close',(code, desc)=>{
             console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
             if(buildProcess){
-                buildProcess.kill('SIGSTOP');
+                buildProcess.disconnect();
             }
         });
     }
@@ -113,7 +113,7 @@ module.exports.ProjectController = class{
         connection.on('close',(code, desc)=>{
             console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
             if(buildProcess){
-                buildProcess.kill('SIGSTOP');
+                buildProcess.disconnect();
             }
         });
     }
