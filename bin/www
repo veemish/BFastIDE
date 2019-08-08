@@ -105,7 +105,7 @@ webSocketServer.on('request', function(request){
     if(message.type === 'utf8' && message.utf8Data === 'build'){
       cli.project.build(connection);
     }else if(message.type === 'utf8' && message.utf8Data.startsWith('run://')){
-      cli.project.run(connection, message.utf8Data.replace('run://',''));
+      cli.project.run(connection, message.utf8Data.replace('run://','bash gradlew'));
     }else{
       connection.sendUTF('I do not understand what to do');
       connection.close();

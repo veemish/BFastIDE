@@ -37,4 +37,8 @@ router.get('/help', function (request, response) {
   });
 });
 
+router.all('/**', function(request, response){
+  response.json({url: request.url});
+});
+
 module.exports = router;
