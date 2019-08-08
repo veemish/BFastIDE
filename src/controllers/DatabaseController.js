@@ -7,7 +7,8 @@ const gitController = new GitController();
 const url = 'mongodb://mdb:27017/_BFastIde';
 const client = new MongoClient(url);
 // if(!client.isConnected){
-client.connect();
+client.connect({ useNewUrlParser: true });
+console.log('after connect');
 // }
 
 module.exports.DatabaseController = class {
@@ -42,23 +43,16 @@ module.exports.DatabaseController = class {
                     }
                     settings.sId = 'gitRemote';
                     client.db().collection('settings')
-                        .updateOne(
-                            {
-                                sId: 'gitRemote'
-                            },
-                            {
-                                $set: settings
-                            },
-                            {
-                                upsert: true
-                            }
+                        .updateOne({sId: 'gitRemote'},{$set: settings},{upsert: true}
                         ).then(va1=>{
                             resolve(va1);
                         }).catch(reason1=>{
+                           //  console.log(reason1);
                             reject({code: -1, message: 'Fails to save git settings', error: reason1});
                         });
                 })
                 .catch(reason=>{
+                    // console.log(reason);
                     reject(reason);
                 });
             }else{

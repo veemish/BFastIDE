@@ -6,9 +6,13 @@ services:
     - idedata:/ide/src/spring
     - mdbdata:/ide/mdb/data:ro
     # - faasdata:/faas
-    ports: 
-    - "55017:3000"
+    # ports: 
+    # - "55017:3000"
     restart: always
+    links: 
+      - mdb
+      - web
+      # - daas
     networks: 
       bfast_net:
         ipv4_address: 172.28.1.1

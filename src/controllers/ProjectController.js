@@ -56,13 +56,26 @@ module.exports.ProjectController = class{
         return gitController.update();
     }
 
+    deploy(){
+        return new Promise((resolve, reject)=>{
+            process.exec('curl -XPOST http://daas:8080/daas/shutdown -H"{}"',(error, stdout, stderr)=>{
+                if(error){
+                    reject({code: -1, message: 'Fail to restart a service', error: stderr.toString() })
+                }else{
+                    resolve({message: stdout.toString()});
+                }
+            });
+        })
+    }
+
     /**
      * 
      * @param {its a web socket connection } connection 
      */
     build(connection){
         let buildProcess = process.exec('bash gradlew build',{
-            cwd: path.join(__dirname, '../spring/daas/')
+            cwd: path.join(__dirname, '../spring/daas/'),
+            // detached: true,
         });
         buildProcess.stdout.on('data',(data)=>{
             // console.log(data);
@@ -78,20 +91,23 @@ module.exports.ProjectController = class{
         });
 
         buildProcess.on('exit', (code)=>{
+            connection.sendUTF('==========TERMINAL CLOSED=========');
             connection.close();
         });
 
         connection.on('close',(code, desc)=>{
             console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
             if(buildProcess){
-                buildProcess.kill('SIGTERM');
+                // buildProcess.unref();
+                buildProcess.kill();
             }
         });
     }
     
     run(connection, command){
         let buildProcess = process.exec(command,{
-            cwd: path.join(__dirname, '../spring/daas/')
+            cwd: path.join(__dirname, '../spring/daas/'),
+            // detached: true,
         });
         buildProcess.stdout.on('data',(data)=>{
             // console.log(data);
@@ -107,13 +123,15 @@ module.exports.ProjectController = class{
         });
 
         buildProcess.on('exit', (code)=>{
+            connection.sendUTF('==========TERMINAL CLOSED=========');
             connection.close();
         });
 
         connection.on('close',(code, desc)=>{
             console.log((new Date().toString()) + ' Peer ' + connection.remoteAddress + ' disconnected.');
             if(buildProcess){
-                buildProcess.kill('SIGTERM');
+                //buildProcess.unref();
+                buildProcess.kill();
             }
         });
     }
