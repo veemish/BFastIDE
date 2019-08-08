@@ -10,21 +10,28 @@ module.exports.RepositoryController = class {
 
     createRepository(schema){
         return new Promise((resolve, reject)=>{
-            if(!schema){
+            if(!schema && !schema.name){
                 reject({code: errCode.REPO_CREATE_CODE,  message: errCode.REPO_CREATE_MESSAGE});
             }else{
+                let queryMethods = '';
+                if(schema.queries){
+                    schema.queries.forEach(query=>{
+                        queryMethods = queryMethods.concat(`fun ${query.name}(${query.parameters}) : ${query.result}\n\t`);
+                    });
+                }
 let repositoryInKotlin = `
 package com.fahamutech.daas.domain
 
 import com.fahamutech.daas.domain.*
-import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.data.mongodb.repository.MongoRepository
+import org.springframework.data.rest.core.annotation.RepositoryRestResource
+import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.data.domain.*
 import java.util.*
 
 @CrossOrigin(origins = ["*"])
 interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
-    
+    ${queryMethods}
 }`
                 var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`);
                 file.writeFile(repoPath, repositoryInKotlin, (err)=>{
