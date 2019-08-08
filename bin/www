@@ -105,7 +105,7 @@ webSocketServer.on('request', function(request){
     if(message.type === 'utf8' && message.utf8Data === 'build'){
       cli.project.build(connection);
     }else if(message.type === 'utf8' && message.utf8Data.startsWith('run://')){
-      cli.project.run(connection, message.utf8Data.replace('run://','bash gradlew'));
+      cli.project.run(connection, message.utf8Data.replace('run://','bash gradlew '));
     }else{
       connection.sendUTF('I do not understand what to do');
       connection.close();
@@ -117,11 +117,19 @@ webSocketServer.on('request', function(request){
 /**
  * Proxy for DaaS application
  */
-app.all('/api/*', function(request, response){
-  http.request(request.url.replace('/api','http://daas:8080'),daasResponse => {
+app.all('/api*', function(request, response){
+  // console.log(request.url.replace('/api','http://daas:8080'));
+  const endpoint = request.url.replace('/api','http://daas:8080');
+  const daasRequest = http.request(endpoint,{
+    method: request.method,
+    headers: request.headers,
+  },daasResponse => {
     daasResponse.pipe(response);
-  }).on('error', (e) => {
+  });
+  daasRequest.on('error', (e) => {
     console.log(e);
     response.status(500);
-  })
+  });
+  daasRequest.write(JSON.stringify(request.body));
+  daasRequest.end();
 });
