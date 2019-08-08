@@ -112,3 +112,16 @@ webSocketServer.on('request', function(request){
     }
   });
 });
+
+
+/**
+ * Proxy for DaaS application
+ */
+app.all('/api/*', function(request, response){
+  http.request(request.url.replace('/api','http://daas:8080'),daasResponse => {
+    daasResponse.pipe(response);
+  }).on('error', (e) => {
+    console.log(e);
+    response.status(500);
+  })
+});

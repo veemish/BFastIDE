@@ -59,11 +59,4 @@ router.get('/help', function (request, response) {
   });
 });
 
-/**
- * proxy to spring boot data REST
- */
-router.all('/api/*', function(request, response){
-  response.json({url: request.url});
-});
-
 module.exports = router;
