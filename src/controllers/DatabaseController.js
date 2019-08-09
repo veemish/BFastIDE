@@ -33,10 +33,10 @@ module.exports.DatabaseController = class {
      * @param {name: 'gitRemote', url: string, name: string } settings 
      */
     saveGitPushSettings(settings){
-        return new Promise(async (resolve, reject)=>{
+        return new Promise((resolve, reject)=>{
             if(settings && settings.name && settings.url && settings.username && settings.token){
                 gitController.addRemote(settings.name, settings.url, settings.username, settings.token)
-                .then(value=>{
+                .then(async value=>{
                     // console.log(value);
                     if(settings.sId){
                         delete settings.sId;
