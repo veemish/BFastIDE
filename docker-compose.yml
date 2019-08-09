@@ -39,7 +39,7 @@ services:
     build: ./services/daasRuntime
     restart: always
     volumes:
-    - daasdata:/app
+    # - daasdata:/app
     - idedata:/ide:ro
     # links: 
     #   - ide
