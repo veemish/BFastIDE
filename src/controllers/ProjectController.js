@@ -73,7 +73,7 @@ module.exports.ProjectController = class{
      * @param {its a web socket connection } connection 
      */
     build(connection){
-        let buildProcess = process.exec('bash gradlew --stop || bash gradlew build',{
+        let buildProcess = process.exec('bash gradlew --stop && bash gradlew build',{
             cwd: path.join(__dirname, '../spring/daas/'),
             // detached: true,
         });
