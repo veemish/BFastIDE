@@ -7,8 +7,8 @@ const gitController = new GitController();
 const url = 'mongodb://mdb:27017/_BFastIde';
 const client = new MongoClient(url);
 // if(!client.isConnected){
-client.connect({ useNewUrlParser: true });
-console.log('after connect');
+client.connect();
+// console.log('after connect');
 // }
 
 module.exports.DatabaseController = class {
@@ -33,7 +33,7 @@ module.exports.DatabaseController = class {
      * @param {name: 'gitRemote', url: string, name: string } settings 
      */
     saveGitPushSettings(settings){
-        return new Promise((resolve, reject)=>{
+        return new Promise(async (resolve, reject)=>{
             if(settings && settings.name && settings.url && settings.username && settings.token){
                 gitController.addRemote(settings.name, settings.url, settings.username, settings.token)
                 .then(value=>{
@@ -42,17 +42,24 @@ module.exports.DatabaseController = class {
                         delete settings.sId;
                     }
                     settings.sId = 'gitRemote';
+                    if(!client.isConnected()){
+                        try{
+                            await client.connect();
+                        }catch(e){
+                            reject({code: -1, message: 'Fail to get mdb connection', error: reason1});
+                        }
+                    }
                     client.db().collection('settings')
                         .updateOne({sId: 'gitRemote'},{$set: settings},{upsert: true}
                         ).then(va1=>{
                             resolve(va1);
                         }).catch(reason1=>{
-                           //  console.log(reason1);
+                            console.log(reason1);
                             reject({code: -1, message: 'Fails to save git settings', error: reason1});
                         });
                 })
                 .catch(reason=>{
-                    // console.log(reason);
+                    console.log(reason);
                     reject(reason);
                 });
             }else{
@@ -62,7 +69,14 @@ module.exports.DatabaseController = class {
     }
 
     getGitPushSettings(){
-        return new Promise((resolve, reject)=>{
+        return new Promise(async (resolve, reject)=>{
+            if(!client.isConnected()){
+                try{
+                    await client.connect();
+                }catch(e){
+                    reject({code: -1, message: 'Fail to get mdb connection', error: reason1});
+                }
+            }
             client.db().collection('settings')
                 .findOne({
                     sId: 'gitRemote'
