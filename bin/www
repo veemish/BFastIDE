@@ -99,20 +99,20 @@ var webSocketServer = new WebSocketServer({
 });
 
 webSocketServer.on('request', function(request){
+  console.log(request.protocolFullCaseMap);
   const connection = request.accept('logs');
   console.log((new Date().toString()) + 'Ws Connection accepted.');
   connection.on('message', function(message){
     if(message.type === 'utf8' && message.utf8Data === 'build'){
       cli.project.build(connection);
     }else if(message.type === 'utf8' && message.utf8Data.startsWith('run://')){
-      cli.project.run(connection, message.utf8Data.replace('run://','bash gradlew '));
+      cli.project.run(connection, message.utf8Data.replace('run://','bash gradlew --stop || bash gradlew '));
     }else{
       connection.sendUTF('I do not understand what to do');
       connection.close();
     }
   });
 });
-
 
 /**
  * Proxy for DaaS application

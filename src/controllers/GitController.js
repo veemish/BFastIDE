@@ -122,7 +122,7 @@ git config --global user.name "bFastUser" && git config --global user.email "use
                     cwd: path.join(__dirname, '../spring/daas')
                 }, (error, stdout, stderr)=>{
                     if(error){
-                        // console.log(error);
+                        console.log(error);
                         // console.log(stderr);
                         // console.log(stdout);
                         reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
@@ -134,7 +134,7 @@ git config --global user.name "bFastUser" && git config --global user.email "use
                             // console.log(stdout);
                             // console.log(stderr);
                             if(error){
-                                // console.log(error);
+                                console.log(error);
                                 reject({code: errCode.GIT_REMOTE_PUSH_CODE, message: errCode.GIT_REMOTE_PUSH_MESSAGE, error: stderr.toString()});
                             }else{
                                 resolve({message: stdout.toString()});
