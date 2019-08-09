@@ -19,7 +19,7 @@ services:
   web:
     build: ./services/webRuntime/
     ports: 
-    - "80:80"
+    - "80:80" # replace ports with your own
     # - "443:443"
     restart: always
     # volumes: 
