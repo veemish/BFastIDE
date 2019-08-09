@@ -16,10 +16,10 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors('*'))
 
-// permissin filter
+// permissin filter and roles filters
 app.all('/*', function(request, response, next){
     console.log('apply securirt here');
     next();
