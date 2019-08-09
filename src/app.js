@@ -19,7 +19,7 @@ app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors('*'))
 
-// permissin filter and roles filters
+// permissin filter and roles filters, replace it with your logics
 app.all('/*', function(request, response, next){
     console.log('apply securirt here');
     next();
