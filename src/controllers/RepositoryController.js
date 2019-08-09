@@ -31,7 +31,7 @@ import java.util.*
 
 @CrossOrigin(origins = ["*"])
 interface ${schema.name}Repository : MongoRepository<${schema.name}, String>{
-    ${queryMethods}
+        ${queryMethods}
 }`
                 var repoPath = path.join(__dirname, `../${projectFolder}/repo/${schema.name}Repository.kt`);
                 file.writeFile(repoPath, repositoryInKotlin, (err)=>{
