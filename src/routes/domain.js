@@ -44,5 +44,14 @@ router.delete('/:name', function(request, response){
     })
 });
 
+router.put('/', function(request, response){
+    cli.domain.updateDomain(request.body)
+    .then(schema=>{
+        response.json(schema);
+    })
+    .catch(reason=>{
+        response.status(503).json(reason);
+    })
+})
 
 module.exports = router;

@@ -12,8 +12,8 @@ let repoController = new RepositoryController();
 
 module.exports.DomainController = class {
 
-    createDomain(schema){
-        return new Promise(async (resolve, reject)=>{
+    createDomain(schema, update){
+        return new Promise((resolve, reject)=>{
             if(!schema){
                 reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain schema must be present"});
             }else if(!schema.name){
@@ -21,6 +21,8 @@ module.exports.DomainController = class {
             }else if(!schema.parent){
                 reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain parent must be present"});
             }else if(!schema.fields){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain fields must be present"});
+            }else if(!schema.queries){
                 reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain fields must be present"});
             }else{
                 let domainFields = '\n';
@@ -48,18 +50,28 @@ import java.util.*
 class ${schema.name} : ${schema.parent}(){
 ${domainFields}
 }`;
-                try{
-                    var domainPath = path.join(__dirname, `../${projectFolder}/domain/${schema.name}.kt`);
-                    // create a domain.
-                    file.writeFileSync(domainPath, domainInKotlin);
-                    // create schema.
-                    await schemaController.createSchema(schema);
-                    // create a repository
-                    await repoController.createRepository(schema);
-                    resolve({domain: domainInKotlin});
-                }catch(e){
-                    reject(e);
-                }
+                var domainPath = path.join(__dirname, `../${projectFolder}/domain/${schema.name}.kt`);
+                this.getDomain(schema.name+'.kt')
+                .then(_=>{
+                    reject({message: 'Domain already exist, update or delete it'});
+                })
+                .catch(async _=>{
+                    try{
+                        // create schema.
+                        if(update && update === true){
+                            await schemaController.updateSchema(schema);
+                        }else{
+                            await schemaController.createSchema(schema);
+                        }
+                        // create a domain.
+                        file.writeFileSync(domainPath, domainInKotlin);
+                        // create a repository
+                        await repoController.createRepository(schema);
+                        resolve({domain: domainInKotlin});
+                    }catch(e){
+                        reject({message: e.toString()});
+                    }
+                });
             }
         });
     }
@@ -115,7 +127,7 @@ ${domainFields}
     }
 
     updateDomain(schema){
-        this.createDomain(schema);
+        return this.createDomain(schema, true);
     }
 
 }

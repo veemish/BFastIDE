@@ -13,7 +13,6 @@ module.exports.SchemaController = class {
                 if(err){
                     reject({code: errCode.DOMAIN_GET_CODE , message: errCode.DOMAIN_GET_MESSAGE, error: err.toString()});
                 }else{
-                    // console.log(data.toString());
                     if(name==='README.md'){
                         resolve({schema: data.toString()});
                     }else{
@@ -39,9 +38,9 @@ module.exports.SchemaController = class {
     createSchema(schema){
         return new Promise((resolve, reject)=>{
             if(schema && schema.name && schema.parent && schema.queries && schema.fields){
-                this.getSchema(schema.name)
+                this.getSchema(`${schema.name}.js`)
                 .then(_=>{
-                    resolve({message: `Schema with name : ${schema.name} alredy exist, update or delete it`});
+                    reject({message: `Schema with name : ${schema.name} alredy exist, update or delete it`});
                 })
                 .catch(_=>{
                     var schemaPath = path.join(__dirname, `../${projectFolder}/schema/${schema.name}.js`);
@@ -57,6 +56,19 @@ module.exports.SchemaController = class {
                 reject({code: errCode.SCHEMA_CREATE_CODE,  message: errCode.SCHEMA_CREATE_MESSAGE});
             }
         });
+    }
+
+    updateSchema(schema){
+       return new Promise((resolve, reject)=>{
+        var schemaPath = path.join(__dirname, `../${projectFolder}/schema/${schema.name}.js`);
+        file.writeFile(schemaPath, JSON.stringify(schema), (err)=>{
+            if(err){
+                reject({code: -1,  message: 'Schema update fails', err: err.toString()});
+            }else{
+                resolve({message: 'Schema saved'});
+            }
+        });
+       })
     }
 
     deleteSchema(name){
