@@ -12,7 +12,7 @@ let repoController = new RepositoryController();
 
 module.exports.DomainController = class {
 
-    createDomain(schema, update){
+    createDomain(schema){
         return new Promise((resolve, reject)=>{
             if(!schema){
                 reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain schema must be present"});
@@ -36,7 +36,6 @@ module.exports.DomainController = class {
                         reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain fields data can't be determined"});
                     }
                 });
-
 let domainInKotlin = `
 package com.fahamutech.daas.domain
 
@@ -58,11 +57,7 @@ ${domainFields}
                 .catch(async _=>{
                     try{
                         // create schema.
-                        if(update && update === true){
-                            await schemaController.updateSchema(schema);
-                        }else{
-                            await schemaController.createSchema(schema);
-                        }
+                        await schemaController.createSchema(schema);
                         // create a domain.
                         file.writeFileSync(domainPath, domainInKotlin);
                         // create a repository
@@ -127,8 +122,56 @@ ${domainFields}
     }
 
     updateDomain(schema){
-        return this.createDomain(schema, true);
-    }
+        return new Promise(async (resolve, reject)=>{
+            if(!schema){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain schema must be present"});
+            }else if(!schema.name){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain name must be present"});
+            }else if(!schema.parent){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain parent must be present"});
+            }else if(!schema.fields){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain fields must be present"});
+            }else if(!schema.queries){
+                reject({code: errCode.DOMAIN_CREATE_CODE, message: "domain fields must be present"});
+            }else{
+                let domainFields = '\n';
+                schema.fields.forEach(element => {
+                    if(element.name && element.type){
+                        if(element.meta){
+                            domainFields = domainFields.concat(`@${element.meta}\n`);
+                        } 
+                        domainFields = domainFields.concat(`var ${element.name} : ${element.type}? = ${element.default}\n`);
+                    }else{
+                        reject({code: errCode.DOMAIN_CREATE_CODE, message: "Domain fields data can't be determined"});
+                    }
+                });
+let domainInKotlin = `
+package com.fahamutech.daas.domain
 
+import com.fahamutech.daas.common.*
+import org.springframework.data.annotation.*
+import org.springframework.data.mongodb.core.index.*
+import org.springframework.data.domain.*
+import org.springframework.data.geo.*
+import java.util.*
+
+class ${schema.name} : ${schema.parent}(){
+${domainFields}
+}`;
+                var domainPath = path.join(__dirname, `../${projectFolder}/domain/${schema.name}.kt`);
+                try{
+                    // create schema.
+                    await schemaController.updateSchema(schema);
+                    // create a domain.
+                    file.writeFileSync(domainPath, domainInKotlin);
+                    // create a repository
+                    await repoController.createRepository(schema);
+                    resolve({domain: domainInKotlin});
+                }catch(e){
+                    reject({message: e.toString()});
+                }
+            }
+        });
+    }
 }
 

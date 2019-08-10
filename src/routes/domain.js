@@ -20,7 +20,7 @@ router.post('/', function(request, response){
         response.json(domain);
     })
     .catch(reason=>{
-        response.status(401).json(reason);
+        response.status(503).json(reason);
     });
 });
 
