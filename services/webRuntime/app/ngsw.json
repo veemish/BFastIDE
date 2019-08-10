@@ -1,0 +1,108 @@
+{
+  "configVersion": 1,
+  "timestamp": 1565442091762,
+  "index": "/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "urls": [
+        "/0-es5.b7d0450d268d61787b53.js",
+        "/1-es2015.4bda1f2b53bbf8b82409.js",
+        "/3-es2015.d53b69d0cd600274d27d.js",
+        "/3-es5.c22917403a1e367669ef.js",
+        "/6-es5.e0d094ce05f615b98264.js",
+        "/7-es2015.4273297b8d05bb43b98a.js",
+        "/7-es5.316bcfd761ef6e2d7a93.js",
+        "/8-es2015.7f1337ade59ebe27e27c.js",
+        "/8-es5.01b0f66f21c1df50814d.js",
+        "/9-es2015.d746a347e3773f3540c8.js",
+        "/common-es2015.95947572de1696b4d2c6.js",
+        "/common-es5.53bccdb4208ceb7ba83a.js",
+        "/favicon.ico",
+        "/index.html",
+        "/main-es2015.abe7227c37113824352b.js",
+        "/main-es5.1a6eb7ba589779eb75ec.js",
+        "/polyfills-es2015.30adf1a4c74c5577e30c.js",
+        "/polyfills-es5.4284368e4b402c75ed83.js",
+        "/runtime-es2015.75e581fada889621bc47.js",
+        "/runtime-es5.827591f31ecaa44c97e6.js",
+        "/styles.9d5e62f5f9840d9f6a51.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "urls": [
+        "/assets/img/ide_icon.svg",
+        "/assets/img/landbg.png",
+        "/assets/img/laptop.svg",
+        "/ide_icon.0752e085265320b147c6.svg",
+        "/landbg.1907f89bcf48d1f003af.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "api",
+      "patterns": [
+        "\\/ide\\/.*"
+      ],
+      "strategy": "freshness",
+      "maxSize": 100,
+      "maxAge": 604800000,
+      "timeoutMs": 600000,
+      "version": 1
+    }
+  ],
+  "hashTable": {
+    "/0-es5.b7d0450d268d61787b53.js": "24e73334bb91955d47b337e21cce4c7b825b2dcb",
+    "/1-es2015.4bda1f2b53bbf8b82409.js": "282c673abf9be84ab33b9115c6511a519398d458",
+    "/3-es2015.d53b69d0cd600274d27d.js": "b832f57c66c22511a14dc46cc2614a8d37fd4d16",
+    "/3-es5.c22917403a1e367669ef.js": "a0eaefe4d5d0a3fdf1addc4fb0a02c6bb09f8c63",
+    "/6-es5.e0d094ce05f615b98264.js": "e39941f0ee744513f4ae006aac597a9a0f07b53d",
+    "/7-es2015.4273297b8d05bb43b98a.js": "d1be4d3482a7958295d5a950dbf12cbd57a09a8a",
+    "/7-es5.316bcfd761ef6e2d7a93.js": "7ef827fa53480444065ddff3000490f61ac4053c",
+    "/8-es2015.7f1337ade59ebe27e27c.js": "df7c388cd14b5ed52cbb17d2fb5ede1ff113bb36",
+    "/8-es5.01b0f66f21c1df50814d.js": "a63cbe6d51a42810a8f16f46a7e605b20c699d55",
+    "/9-es2015.d746a347e3773f3540c8.js": "bf46edd9bcee3c1f3fc82b09c40f941c69397c6e",
+    "/assets/img/ide_icon.svg": "70da964b00d1dfa79cd625c48eb91fc962d6af80",
+    "/assets/img/landbg.png": "bae551775b55107d7609f63abe20324dcd6e526f",
+    "/assets/img/laptop.svg": "f2bd6aa173cd6dace3cfeba45a6dd2a3d12f1e7d",
+    "/common-es2015.95947572de1696b4d2c6.js": "f7c3e850ca7afad12f06320c76d58d007f0d49ee",
+    "/common-es5.53bccdb4208ceb7ba83a.js": "ca9bea6fcd82ea04c3b18aaeecafd3bf45397070",
+    "/favicon.ico": "610f385c4bb3e3df439a7e527d342db56fecb084",
+    "/ide_icon.0752e085265320b147c6.svg": "70da964b00d1dfa79cd625c48eb91fc962d6af80",
+    "/index.html": "deaffd5ae0080c2f88f1ec87c85631d684c10752",
+    "/landbg.1907f89bcf48d1f003af.png": "bae551775b55107d7609f63abe20324dcd6e526f",
+    "/main-es2015.abe7227c37113824352b.js": "84df79b565020c071d3c57fd1c1a411ddf45182a",
+    "/main-es5.1a6eb7ba589779eb75ec.js": "5fe2aed8b6660c369e329f7e2202fe3af0b1c97a",
+    "/polyfills-es2015.30adf1a4c74c5577e30c.js": "365644ee17e21969b6e965e4f4490195912fec17",
+    "/polyfills-es5.4284368e4b402c75ed83.js": "46fe6835000d0811ea973ee56e853403a77dccb5",
+    "/runtime-es2015.75e581fada889621bc47.js": "42c5f0c7fe1159b5539571a346128085af0547fc",
+    "/runtime-es5.827591f31ecaa44c97e6.js": "414e64a710e8afac10953a413b8151106fa57a0e",
+    "/styles.9d5e62f5f9840d9f6a51.css": "73ae1a15d725aee30af7ba988cb3bcd63a8eef2c"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ]
+}
