@@ -38,15 +38,20 @@ module.exports.SchemaController = class {
 
     createSchema(schema){
         return new Promise((resolve, reject)=>{
-            if(schema){
-                var schemaPath = path.join(__dirname, `../${projectFolder}/schema/${schema.name}.js`);
-                // console.log( JSON.stringify(schema));
-                file.writeFile(schemaPath, JSON.stringify(schema), (err)=>{
-                    if(err){
-                        reject({code: errCode.SCHEMA_CREATE_CODE,  message: errCode.SCHEMA_CREATE_MESSAGE, err: err.toString()});
-                    }else{
-                        resolve({message: 'Schema saved'});
-                    }
+            if(schema && schema.name && schema.parent && schema.queries && schema.fields){
+                this.getSchema(schema.name)
+                .then(_=>{
+                    resolve({message: `Schema with name : ${schema.name} alredy exist, update or delete it`});
+                })
+                .catch(_=>{
+                    var schemaPath = path.join(__dirname, `../${projectFolder}/schema/${schema.name}.js`);
+                    file.writeFile(schemaPath, JSON.stringify(schema), (err)=>{
+                        if(err){
+                            reject({code: errCode.SCHEMA_CREATE_CODE,  message: errCode.SCHEMA_CREATE_MESSAGE, err: err.toString()});
+                        }else{
+                            resolve({message: 'Schema saved'});
+                        }
+                    });
                 });
             }else{
                 reject({code: errCode.SCHEMA_CREATE_CODE,  message: errCode.SCHEMA_CREATE_MESSAGE});
@@ -66,4 +71,3 @@ module.exports.SchemaController = class {
         });
     }
 }
-
