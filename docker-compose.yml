@@ -13,9 +13,9 @@ services:
       - mdb
       - web
       # - daas
-    networks: 
-      bfast_net:
-        ipv4_address: 172.28.1.1
+    # networks: 
+    #   bfast_net:
+    #     ipv4_address: 172.28.1.1
   web:
     build: ./services/webRuntime/
     ports: 
@@ -24,17 +24,17 @@ services:
     restart: always
     # volumes: 
     #   - webdata:'/'
-    networks: 
-      bfast_net:
-        ipv4_address: 172.28.1.2
+    # networks: 
+    #   bfast_net:
+    #     ipv4_address: 172.28.1.2
   mdb:
     image: mongo
     volumes:
     - mdbdata:/var/data
     restart: always
-    networks: 
-      bfast_net:
-        ipv4_address: 172.28.1.3
+    # networks: 
+    #   bfast_net:
+    #     ipv4_address: 172.28.1.3
   daas:
     build: ./services/daasRuntime
     restart: always
@@ -44,24 +44,27 @@ services:
     # links: 
     #   - ide
     #   - mdb
-    networks: 
-      bfast_net:
-        ipv4_address: 172.28.1.4
-  # faas:
-  #   image: ubuntu:bionic
-  #   restart: always
-  #   volumes: 
-  #   - faasdata:/faas
+    # networks: 
+    #   bfast_net:
+    #     ipv4_address: 172.28.1.4
+  faas:
+    build: ./services/faasRuntime
+    restart: always
+    # networks: 
+    #   bfast_net:
+    #     ipv4_address: 172.28.1.5
+    # volumes: 
+    # - faasdata:/faas
 volumes: 
   idedata: {}
   mdbdata: {}
   daasdata: {}
   faasdata: {}
   webdata: {}
-networks: 
-  bfast_net:
-    ipam: 
-      driver: default
-      config: 
-        - subnet: 172.28.0.0/16
+# networks: 
+#   bfast_net:
+#     ipam: 
+#       driver: default
+#       config: 
+#         - subnet: 172.28.0.0/16
   

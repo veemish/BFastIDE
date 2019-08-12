@@ -5,28 +5,11 @@ let GitController = require('./GitController').GitController;
 
 const gitController = new GitController();
 const url = 'mongodb://mdb:27017/_BFastIde';
-const client = new MongoClient(url);
-// if(!client.isConnected){
+const client = new MongoClient(url, { useNewUrlParser: true });
+
 client.connect();
-// console.log('after connect');
-// }
 
 module.exports.DatabaseController = class {
-    // getConnection(){
-    //     return new Promise((resolve, reject)=>{
-    //         if(client.isConnected){
-    //             resolve(client.db());
-    //         }else{
-    //             client.connect()
-    //             .then(value=>{
-    //                 resolve(value.db());
-    //             })
-    //             .catch(reason=>{
-    //                 reject(reason);
-    //             });
-    //         }
-    //     });
-    // }
 
     /**
      * save push informations

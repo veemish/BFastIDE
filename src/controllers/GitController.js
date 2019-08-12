@@ -2,8 +2,6 @@
 
 var os = require('os');
 var child_process = require ('child_process');
-// var fs = require('fs');
-// var nodeGit = require('nodegit');
 var path = require('path');
 var errCode = require('../erroCode');
 
