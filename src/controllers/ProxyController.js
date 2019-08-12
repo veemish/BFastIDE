@@ -20,7 +20,7 @@ module.exports.ProxyController = class {
     }
 
     faas(request, response){
-         const endpoint = request.url.replace('/function','http://faas:3000/function');
+         const endpoint = request.url.replace('/function','http://faas:3000/faas/function');
          const faasRequest = http.request(endpoint,{
              method: request.method,
              headers: request.headers,
@@ -33,5 +33,21 @@ module.exports.ProxyController = class {
          });
          faasRequest.write(JSON.stringify(request.body));
          faasRequest.end();
+    }
+
+    faasManage(request, response){
+        const endpoint = request.url.replace('/faas','http://faas:3000/faas/manage');
+        const faasRequest = http.request(endpoint,{
+            method: request.method,
+            headers: request.headers,
+        },faasResponse => {
+            faasResponse.pipe(response);
+        });
+        faasRequest.on('error', (e) => {
+            console.log(e);
+            response.status(503);
+        });
+        faasRequest.write(JSON.stringify(request.body));
+        faasRequest.end();
     }
 }

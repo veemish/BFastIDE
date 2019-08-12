@@ -72,5 +72,9 @@ router.all('/function*', function(request, response){
   cli.proxy.faas(request, response);
 });
 
+router.all('/faas*', function(request, response){
+  cli.proxy.faasManage(request,response);
+});
+
 
 module.exports = router;
