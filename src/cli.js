@@ -7,8 +7,10 @@ let SchemaController = require('./controllers/SchemaController').SchemaControlle
 let ProjectController = require('./controllers/ProjectController').ProjectController;
 let DatabaseController = require('./controllers/DatabaseController').DatabaseController;
 let LogsController = require('./controllers/LogsController').LogsController;
+let ProxyController = require('./controllers/ProxyController').ProxyController;
 
 let CliController = {
+    proxy: new ProxyController(),
     project: new ProjectController(),
     git: new GitController(),
     domain: new DomainController(),

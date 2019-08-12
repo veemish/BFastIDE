@@ -25,7 +25,6 @@ app.all('/*', function(request, response, next){
     next();
 });
 
-
 app.use('/', indexRouter);
 app.use('/domain', domainRouter);
 app.use('/schema', schemaRouter);

@@ -2,6 +2,7 @@
 
 var  express = require('express');
 var router = express.Router();
+var cli = require('../cli').cli;
 
 router.get('/',function(request, response){
   response.json({
@@ -58,5 +59,18 @@ router.get('/help', function (request, response) {
     }
   });
 });
+
+
+/**
+ * Proxy for DaaS and FaaS
+ */
+router.all('/api*', function(request, response){
+  cli.proxy.daas(request, response);
+});
+
+router.all('/function*', function(request, response){
+  cli.proxy.faas(request, response);
+});
+
 
 module.exports = router;
